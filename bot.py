@@ -151,8 +151,8 @@ async def get_card(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "SELECT card_id FROM card_history WHERE telegram_id = %s AND shown_at > %s",
         (user_id, limit_time)
     )
-    used_cards = {r[0] for r in cursor.fetchall()}
-    available_cards = [c for c in cards if c["id"] not in used_cards] or cards
+    used_cards = {str(r[0]) for r in cursor.fetchall()}
+    available_cards = [c for c in cards if str(c["id"]) not in used_cards]
 
     card = random.choice(available_cards)
     user_cards[user_id] = card
