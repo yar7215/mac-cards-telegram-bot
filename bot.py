@@ -134,9 +134,15 @@ async def get_card(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if row and now - row[0] < 86400:
         hours_left = int((86400 - (now - row[0])) / 3600)
+
+        keyboard = [[
+            InlineKeyboardButton("🎴 Отримати карту дня", callback_data="get_card")
+        ]]
+
         await query.message.reply_text(
-            f"🌿 Ти вже отримав(ла) карту сьогодні.\n"
-            f"Повертайся через {hours_left} год 💛"
+            f"🌿 Ти вже отримав(ла) свою сьогоднішню карту.\n"
+            f"Повертайся приблизно через {hours_left} год 💛",
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
 
