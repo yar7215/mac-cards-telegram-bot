@@ -70,6 +70,14 @@ with open("cards.json", "r", encoding="utf-8") as f:
 user_cards = {}
 user_steps = {}
 
+def get_card_keyboard(extra_buttons=None):
+    keyboard = [[InlineKeyboardButton("🎴 Отримати карту дня", callback_data="get_card")]]
+
+    if extra_buttons:
+        keyboard.insert(0, extra_buttons)
+
+    return InlineKeyboardMarkup(keyboard)
+
 # ---------- START ----------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -195,11 +203,14 @@ async def show_full_card(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.message.reply_text("Спочатку отримай карту 🌿")
         return
 
-    keyboard = [[InlineKeyboardButton("💫 Хочу на МАК-сесію", callback_data="want_session")]]
+    keyboard = get_card_keyboard(
+    [InlineKeyboardButton("💫 Хочу на МАК-сесію", callback_data="want_session")]
+    )
+
     await query.message.reply_text(
         f"🔮 *{card['title']}*\n\n{card['text']}",
         parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup(keyboard)
+        reply_markup=keyboard
     )
 
 # ---------- WANT SESSION ----------
@@ -265,7 +276,10 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🆕 Нова заявка\n\n👤 {name}\n📞 {phone}\n🆔 {user.id}"
         )
 
-        await update.message.reply_text("✨ Дякую! Ми звʼяжемось з тобою 💛")
+        await update.message.reply_text(
+            "✨ Дякую! Ми звʼяжемось з тобою 💛",
+            reply_markup=get_card_keyboard()
+        )
 
 # ---------- MAIN ----------
 def main():
