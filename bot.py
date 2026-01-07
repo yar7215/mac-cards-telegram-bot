@@ -109,6 +109,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text,
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
+    
+async def show_card_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [[InlineKeyboardButton("🎴 Отримати карту дня", callback_data="get_card")]]
+
+    await update.message.reply_text(
+        "🌿 Натисни кнопку нижче, щоб отримати карту дня ✨",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
 
 # ---------- GET CARD ----------
 async def get_card(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -213,6 +221,7 @@ async def want_session(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     if user_id not in user_steps:
+        await show_card_button(update, context)
         return
 
     step = user_steps[user_id]["step"]
