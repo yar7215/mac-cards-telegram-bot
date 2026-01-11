@@ -255,6 +255,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             user_steps.pop(user_id)
             await update.message.reply_text("🌿 Добре")
+            reply_markup=get_card_keyboard()
 
     elif step == "phone":
         name = user_steps[user_id]["name"]
