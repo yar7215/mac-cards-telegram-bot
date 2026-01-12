@@ -281,11 +281,30 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=get_card_keyboard()
         )
 
+# ---------- STATS (АДМІН) ----------
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_CHAT_ID:
+        return
+
+    cursor.execute("SELECT COUNT(*) FROM bot_users")
+    total_users = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT telegram_id) FROM card_history")
+    active_users = cursor.fetchone()[0]
+
+    await update.message.reply_text(
+        f"📊 Статистика бота:\n\n"
+        f"👥 Всього користувачів: {total_users}\n"
+        f"🎴 Отримували карту: {active_users}"
+    )
+
 # ---------- MAIN ----------
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("stats", stats))
+
     app.add_handler(CallbackQueryHandler(get_card, pattern="get_card"))
     app.add_handler(CallbackQueryHandler(show_full_card, pattern="show_full_card"))
     app.add_handler(CallbackQueryHandler(want_session, pattern="want_session"))
